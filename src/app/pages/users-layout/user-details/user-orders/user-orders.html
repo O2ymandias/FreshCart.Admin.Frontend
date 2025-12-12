@@ -1,0 +1,75 @@
+@let userOrders = orders();
+
+@if (userOrders.length > 0) {
+  <p-card header="User Orders">
+    <p-table
+      class="app-ring-1 overflow-hidden rounded-2xl"
+      #dt
+      [value]="userOrders"
+      rowHover="true"
+      dataKey="id"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Order ID</th>
+          <th>Order Date</th>
+          <th>Order Status</th>
+          <th>Payment Status</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-userOrder>
+        <tr>
+          <td>{{ userOrder.orderId }}</td>
+          <td>{{ userOrder.orderDate | date: "medium" }}</td>
+          <td>
+            <p-tag
+              [value]="userOrder.orderStatus"
+              [severity]="statusToSeverity(userOrder.orderStatus)"
+              class="font-medium"
+            />
+          </td>
+          <td>
+            <p-tag
+              [value]="userOrder.paymentStatus"
+              [severity]="statusToSeverity(userOrder.paymentStatus)"
+              class="font-medium"
+            />
+          </td>
+          <td>
+            {{ userOrder.total | currency: "USD" : "symbol" : "1.2-2" }}
+          </td>
+          <td>
+            <a
+              [routerLink]="['/orders', 'details', userOrder.orderId]"
+              pButton
+              severity="primary"
+              icon="pi pi-search"
+              rounded
+              outlined
+            >
+            </a>
+          </td></tr
+      ></ng-template>
+
+      <ng-template #footer>
+        <tr>
+          <td colspan="8">
+            <p-paginator
+              [rows]="pageSize()"
+              [totalRecords]="totalRecords()"
+              [rowsPerPageOptions]="rowsPerPageOptions"
+              [first]="first()"
+              [showCurrentPageReport]="true"
+              [currentPageReportTemplate]="
+                'Showing {first} to {last} of {totalRecords} entries'
+              "
+              (onPageChange)="onPageChange($event)"
+            />
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+}

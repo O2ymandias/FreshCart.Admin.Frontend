@@ -1,0 +1,176 @@
+<p-drawer #drawerRef [(visible)]="visible">
+  <ng-template #headless>
+    <div class="flex h-full flex-col">
+      <div
+        class="border-surface flex shrink-0 items-center justify-between border-b px-6 py-4"
+      >
+        <app-logo />
+        <span>
+          <p-button
+            type="button"
+            [outlined]="true"
+            [rounded]="true"
+            severity="secondary"
+            icon="pi pi-times"
+            (click)="closeCallback($event)"
+          />
+        </span>
+      </div>
+      <div class="overflow-y-auto">
+        <!-- Management -->
+        <ul class="m-0 list-none p-4">
+          <li>
+            <div
+              pStyleClass="@next"
+              enterFromClass="hidden"
+              enterActiveClass="animate-slidedown"
+              leaveToClass="hidden"
+              leaveActiveClass="animate-slideup"
+              class="text-surface-600 dark:text-surface-200 p-ripple flex cursor-pointer items-center justify-between p-4"
+            >
+              <span class="font-bold">Management</span>
+              <i class="pi pi-chevron-down"></i>
+            </div>
+            <ul class="m-0 list-none overflow-hidden p-0">
+              <li>
+                <app-drawer-item
+                  routerLink="/dashboard"
+                  icon="pi pi-chart-line"
+                  label="Dashboard"
+                />
+              </li>
+              <li>
+                <app-drawer-item
+                  routerLink="/roles"
+                  icon="pi pi-key"
+                  label="Roles"
+                />
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <!-- Management -->
+
+        <!-- Application  -->
+        <ul class="m-0 list-none p-4">
+          <li>
+            <div
+              pStyleClass="@next"
+              enterFromClass="hidden"
+              enterActiveClass="animate-slidedown"
+              leaveToClass="hidden"
+              leaveActiveClass="animate-slideup"
+              class="text-surface-600 dark:text-surface-200 p-ripple flex cursor-pointer items-center justify-between p-4"
+            >
+              <span class="font-bold">Application</span>
+              <i class="pi pi-chevron-down"></i>
+            </div>
+            <ul class="m-0 list-none overflow-hidden p-0">
+              <li>
+                <a
+                  pStyleClass="@next"
+                  enterFromClass="hidden"
+                  enterActiveClass="animate-slidedown"
+                  leaveToClass="hidden"
+                  leaveActiveClass="animate-slideup"
+                  class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                >
+                  <i class="pi pi-folder mr-2"></i>
+                  <span class="font-medium">Catalog</span>
+                  <i class="pi pi-chevron-down ml-auto"></i>
+                </a>
+                <ul
+                  class="m-0 hidden list-none overflow-y-hidden py-0 pr-0 pl-4 transition-all duration-[400ms] ease-in-out"
+                >
+                  <li>
+                    <a
+                      [routerLink]="['/products']"
+                      class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                    >
+                      <i class="pi pi-shopping-cart mr-2"></i>
+                      <span class="font-medium"> Products </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      [routerLink]="['/categories']"
+                      class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                    >
+                      <i class="pi pi-list mr-2"></i>
+                      <span class="font-medium"> Categories </span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a
+                      [routerLink]="['/brands']"
+                      class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                    >
+                      <i class="pi pi-tag mr-2"></i>
+                      <span class="font-medium"> Brands </span>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <a
+                  [routerLink]="['/users']"
+                  class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                >
+                  <i class="pi pi-users mr-2"></i>
+                  <span class="font-medium"> Users </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  [routerLink]="['/orders']"
+                  class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                >
+                  <i class="pi pi-shopping-bag mr-2"></i>
+                  <span class="font-medium"> Orders </span>
+                </a>
+              </li>
+              <li>
+                <a
+                  [routerLink]="['/sales']"
+                  class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple flex cursor-pointer items-center p-4 transition-colors duration-150"
+                >
+                  <i class="pi pi-dollar mr-2"></i>
+                  <span class="font-medium"> Sales </span>
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+        <!-- Application  -->
+      </div>
+
+      @let payload = jwtPayload();
+      @if (payload) {
+        <div class="mt-auto">
+          <hr class="border-surface mx-4 mb-4 border-0 border-t" />
+          <a
+            [routerLink]="['/profile']"
+            class="rounded-border text-surface-700 dark:text-surface-100 hover:bg-surface-100 dark:hover:bg-surface-700 p-ripple m-4 flex cursor-pointer items-center gap-2 p-4 transition-colors duration-150"
+          >
+            <p-avatar image="/anonymous-avatar.png" shape="circle" />
+            <span class="font-bold">
+              {{ payload.name }}
+            </span>
+          </a>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-drawer>
+
+<p-button
+  [rounded]="true"
+  type="button"
+  variant="text"
+  severity="secondary"
+  icon="pi pi-bars"
+  (click)="showDrawer()"
+/>

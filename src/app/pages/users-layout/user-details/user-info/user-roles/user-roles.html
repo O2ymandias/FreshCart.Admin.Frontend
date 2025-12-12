@@ -1,0 +1,49 @@
+<div class="app-ring-1 flex flex-col gap-2 rounded px-4 py-2 shadow-sm">
+  <div class="flex items-center gap-6">
+    <div
+      class="flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400"
+    >
+      <i class="pi pi-shield text-sky-500"></i>
+      <span> Roles </span>
+    </div>
+
+    <!-- Edit icon -->
+    <p-button
+      icon="pi pi-plus"
+      severity="help"
+      outlined
+      rounded
+      size="small"
+      (click)="showAssignToRoleDialog.set(true)"
+    />
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    @for (role of user().roles; track $index) {
+      <p-tag severity="info" rounded class="font-medium">
+        {{ role }}
+      </p-tag>
+    }
+  </div>
+</div>
+
+@let roles = allRoles();
+@if (roles.length > 0) {
+  <p-dialog
+    header="Assign User to a Role"
+    [modal]="true"
+    [(visible)]="showAssignToRoleDialog"
+    styleClass="w-3/4 md:w-1/2"
+    [closeButtonProps]="{
+      severity: 'secondary',
+      rounded: true,
+      outlined: true,
+    }"
+  >
+    <app-assign-to-role
+      [roles]="roles"
+      [user]="user()"
+      (onUpdate)="onUserRolesUpdate()"
+    />
+  </p-dialog>
+}

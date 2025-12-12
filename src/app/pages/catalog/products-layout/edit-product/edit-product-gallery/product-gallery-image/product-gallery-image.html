@@ -1,0 +1,16 @@
+<img
+  [src]="imageSrc()"
+  [alt]="imageAlt()"
+  class="h-[200px] w-full rounded-lg object-cover ring-1"
+/>
+
+<button
+  pButton
+  type="button"
+  severity="danger"
+  icon="pi pi-times"
+  rounded
+  size="small"
+  class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2 ring-2 ring-[var(--p-dialog-background)]"
+  (click)="onRemoveImage()"
+></button>

@@ -1,0 +1,15 @@
+<p-card header="Orders" class="relative h-full text-center">
+  <a
+    class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+    pButton
+    [routerLink]="['/orders']"
+    icon="pi pi-arrow-up-right"
+    size="small"
+    rounded
+    severity="secondary"
+  ></a>
+  <h2 class="text-primary text-2xl font-semibold">
+    {{ totalOrders() }}
+  </h2>
+  <p class="text-gray-500">Total Orders</p>
+</p-card>

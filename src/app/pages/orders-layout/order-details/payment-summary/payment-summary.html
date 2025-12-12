@@ -1,0 +1,42 @@
+<p-fieldset legend="Payment Summary" [toggleable]="true">
+  <div class="px-4 py-2">
+    <ul class="space-y-4">
+      <!-- Subtotal -->
+      <li class="flex items-center justify-between">
+        <span class="flex items-center gap-2 font-semibold">
+          <i class="pi pi-shopping-cart text-blue-500"></i>
+          Subtotal
+        </span>
+        <span class="font-medium opacity-75">
+          {{ order().subTotal | currency: "USD" : "symbol" : "1.2-2" }}
+        </span>
+      </li>
+
+      <!-- Shipping -->
+      <li class="flex items-center justify-between">
+        <span class="flex items-center gap-2 font-semibold">
+          <i class="pi pi-truck text-green-500"></i>
+          Shipping Cost
+        </span>
+        <span class="font-medium opacity-75">
+          {{
+            order().deliveryMethodCost | currency: "USD" : "symbol" : "1.2-2"
+          }}
+        </span>
+      </li>
+
+      <hr class="border-gray-300 dark:border-gray-600" />
+
+      <!-- Total -->
+      <li class="flex items-center justify-between text-lg">
+        <span class="flex items-center gap-2 font-semibold">
+          <i class="pi pi-wallet text-purple-500"></i>
+          Total
+        </span>
+        <span class="text-lg font-semibold">
+          {{ order().total | currency: "USD" : "symbol" : "1.2-2" }}
+        </span>
+      </li>
+    </ul>
+  </div>
+</p-fieldset>

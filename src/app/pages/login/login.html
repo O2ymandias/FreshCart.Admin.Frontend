@@ -1,0 +1,103 @@
+<section class="px-6 py-12">
+  <p-card class="mx-auto w-full max-w-xl p-5">
+    <ng-template pTemplate="header">
+      <div class="flex flex-col items-center gap-4">
+        <img src="/logo.png" alt="Logo" class="size-20" />
+
+        <div class="flex w-full flex-col items-center gap-2 text-center">
+          <h2
+            class="text-surface-900 dark:text-surface-0 text-2xl leading-tight font-semibold"
+          >
+            Welcome Back
+          </h2>
+          <p class="text-surface-600 dark:text-surface-400 text-sm">
+            This is only for admin users
+          </p>
+        </div>
+      </div>
+    </ng-template>
+
+    <!-- Form -->
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="login()"
+      class="mt-6 flex flex-col gap-6"
+    >
+      <!-- Username or Email -->
+      @let userNameOrEmail = loginForm.controls.userNameOrEmail;
+      <div class="flex flex-col gap-2">
+        <label
+          for="userNameOrEmail"
+          class="text-surface-900 dark:text-surface-0 text-sm font-medium"
+        >
+          Username or Email
+        </label>
+        <input
+          id="userNameOrEmail"
+          type="text"
+          formControlName="userNameOrEmail"
+          pInputText
+          placeholder="Enter your username or email"
+          autocomplete="email"
+          class="w-full"
+        />
+
+        @if (
+          (userNameOrEmail.dirty || userNameOrEmail.touched) &&
+          userNameOrEmail.hasError("required")
+        ) {
+          <p-message severity="error" variant="simple" size="small">
+            Username or Email is required
+          </p-message>
+        }
+      </div>
+
+      <!-- Password -->
+      @let password = loginForm.controls.password;
+      <div class="flex flex-col gap-2">
+        <label
+          for="password"
+          class="text-surface-900 dark:text-surface-0 text-sm font-medium"
+        >
+          Password
+        </label>
+        <p-password
+          formControlName="password"
+          inputId="password"
+          placeholder="Enter your password"
+          [toggleMask]="true"
+          [feedback]="false"
+          fluid
+          autocomplete="off"
+        />
+        @if (password.dirty && password.hasError("required")) {
+          <p-message severity="error" variant="simple" size="small">
+            Password is required
+          </p-message>
+        }
+      </div>
+
+      <!-- Actions -->
+      <div
+        class="flex w-full flex-col items-center justify-between gap-3 sm:flex-row"
+      >
+        <a
+          [routerLink]="['/forget-password']"
+          class="text-primary hover:text-primary-emphasis font-medium"
+        >
+          Forgot your password?
+        </a>
+
+        <p-button
+          type="submit"
+          [loading]="loading()"
+          [disabled]="loginForm.invalid"
+          icon="pi pi-user"
+          label="Sign In"
+          severity="primary"
+          fluid
+        />
+      </div>
+    </form>
+  </p-card>
+</section>

@@ -1,0 +1,15 @@
+<p-card header="Total Sales" class="relative h-full text-center">
+  <a
+    class="absolute top-0 right-0 translate-x-1/2 -translate-y-1/2"
+    pButton
+    [routerLink]="['/sales']"
+    icon="pi pi-arrow-up-right"
+    size="small"
+    rounded
+    severity="secondary"
+  ></a>
+  <h2 class="text-primary text-2xl font-semibold">
+    {{ totalSales() | currency: "USD" : "symbol" : "1.2-2" }}
+  </h2>
+  <p class="text-gray-500">This Month</p>
+</p-card>

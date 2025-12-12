@@ -1,0 +1,57 @@
+<!-- Template Variables -->
+@let selectedTrans = selectedTranslation();
+
+<p-button
+  severity="secondary"
+  label="Translations"
+  icon="pi pi-globe"
+  (click)="showTranslations()"
+/>
+
+<p-dialog
+  header="Translations"
+  [modal]="true"
+  [(visible)]="visible"
+  styleClass="w-[75%] md:w-1/2"
+  [closeButtonProps]="{
+    severity: 'secondary',
+    rounded: true,
+    outlined: true,
+  }"
+>
+  <p-select
+    [options]="translationsKeys()"
+    [(ngModel)]="selectedOption"
+    placeholder="Select Language"
+    [showClear]="true"
+    [dropdownIcon]="'pi pi-globe'"
+    class="w-full md:w-52"
+    (onChange)="onSelectTranslation()"
+  />
+
+  @if (selectedOption()) {
+    @if (selectedTrans) {
+      <div class="my-4 space-y-4">
+        <p-fieldset legend="Name">
+          <p>
+            {{ selectedTrans.name }}
+          </p>
+        </p-fieldset>
+
+        <p-fieldset legend="Description">
+          <p>
+            {{ selectedTrans.description }}
+          </p>
+        </p-fieldset>
+      </div>
+    } @else {
+      <p class="p-10 text-center text-lg font-medium opacity-75">
+        No translation found.
+      </p>
+    }
+  } @else {
+    <p class="p-10 text-center text-lg font-medium opacity-75">
+      Please select a language to show.
+    </p>
+  }
+</p-dialog>

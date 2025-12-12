@@ -1,0 +1,17 @@
+<p-inputgroup class="w-full">
+  <input
+    type="search"
+    pInputText
+    [(ngModel)]="searchQuery"
+    placeholder="Search by Order ID"
+    (keyup.enter)="search()"
+  />
+  <p-inputgroup-addon>
+    <p-button
+      icon="pi pi-search"
+      severity="secondary"
+      variant="text"
+      (onClick)="search()"
+    />
+  </p-inputgroup-addon>
+</p-inputgroup>

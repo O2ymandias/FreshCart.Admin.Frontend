@@ -1,0 +1,194 @@
+import { Role } from '../../../shared/models/roles.model';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  OnInit,
+  PLATFORM_ID,
+  signal,
+} from '@angular/core';
+import { BreadcrumbModule } from 'primeng/breadcrumb';
+import { User, UsersQueryOptions } from '../../../shared/models/users-model';
+import { MenuItem } from 'primeng/api';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
+import { PaginatorState, PaginatorModule } from 'primeng/paginator';
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputGroup } from 'primeng/inputgroup';
+import { FormsModule } from '@angular/forms';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
+import { SelectModule } from 'primeng/select';
+import { UsersService } from '../../../core/services/users-service';
+import { RolesService } from '../../../core/services/roles-service';
+import { Tooltip } from 'primeng/tooltip';
+import { RouterLink } from '@angular/router';
+import { isPlatformServer } from '@angular/common';
+import { EmailLink } from '../../orders-layout/order-details/order-shipping-info/email-link/email-link';
+import { PhoneLink } from '../../orders-layout/order-details/order-shipping-info/phone-link/phone-link';
+
+@Component({
+  selector: 'app-users',
+  imports: [
+    BreadcrumbModule,
+    TableModule,
+    ButtonModule,
+    InputGroup,
+    FormsModule,
+    InputGroupAddonModule,
+    PaginatorModule,
+    InputTextModule,
+    SelectModule,
+    Tooltip,
+    RouterLink,
+    EmailLink,
+    PhoneLink,
+  ],
+  templateUrl: './users.html',
+  styleUrl: './users.scss',
+})
+export class Users implements OnInit {
+  // Dependencies
+  private readonly _userService = inject(UsersService);
+  private readonly _roleService = inject(RolesService);
+  private readonly _destroyRef = inject(DestroyRef);
+  private readonly _platformId = inject(PLATFORM_ID);
+
+  // Constants
+  readonly DEFAULT_PAGE_NUMBER = 1;
+  readonly DEFAULT_PAGE_SIZE = 10;
+
+  // Properties
+  users = signal<User[]>([]);
+  roles = signal<Role[]>([]);
+
+  // Pagination
+  pageSize = signal(this.DEFAULT_PAGE_SIZE);
+  pageNumber = signal(this.DEFAULT_PAGE_NUMBER);
+  totalRecords = signal(0);
+  first = computed(() => (this.pageNumber() - 1) * this.pageSize()); // Convert To Zero-Based Index
+  rowsPerPageOptions = [
+    this.DEFAULT_PAGE_SIZE * 0.5,
+    this.DEFAULT_PAGE_SIZE * 1,
+    this.DEFAULT_PAGE_SIZE * 2,
+  ];
+
+  // Search
+  searchQuery = signal('');
+
+  // Filter
+  selectedRole = signal<Role | null>(null);
+
+  navigationItems: MenuItem[] = [
+    {
+      label: 'Home',
+      routerLink: '/dashboard',
+      icon: 'pi pi-home',
+    },
+    {
+      label: 'Users',
+      disabled: true,
+    },
+  ];
+
+  ngOnInit(): void {
+    if (isPlatformServer(this._platformId)) return;
+
+    this._loadUsers({
+      pageNumber: this.DEFAULT_PAGE_NUMBER,
+      pageSize: this.DEFAULT_PAGE_SIZE,
+    });
+
+    this._loadRoles();
+  }
+
+  onPageChange(event: PaginatorState): void {
+    let pageNumber = this.DEFAULT_PAGE_NUMBER;
+    if (event.page) pageNumber = event.page + 1; // event.page is zero-based
+    const pageSize = event.rows ?? this.DEFAULT_PAGE_SIZE;
+
+    this.pageNumber.set(pageNumber);
+    this.pageSize.set(pageSize);
+
+    // Considers: search query and sort options
+    const search = this.searchQuery();
+
+    this._loadUsers({
+      pageNumber,
+      pageSize,
+      search,
+    });
+  }
+
+  search(): void {
+    // Reset to first page BUT keep the current page size.
+    this._loadUsers({
+      pageNumber: this.DEFAULT_PAGE_NUMBER,
+      pageSize: this.pageSize(),
+      search: this.searchQuery(),
+    });
+  }
+
+  filter(): void {
+    // Reset to first page BUT keep the current page size.
+    const role = this.selectedRole();
+    if (!role) {
+      this._loadUsers({
+        pageNumber: this.DEFAULT_PAGE_NUMBER,
+        pageSize: this.pageSize(),
+      });
+      return;
+    }
+
+    this._loadUsers({
+      pageNumber: this.DEFAULT_PAGE_NUMBER,
+      pageSize: this.pageSize(),
+      roleId: role.id,
+    });
+  }
+
+  refresh(): void {
+    // Reset the search query.
+    this.searchQuery.set('');
+
+    // Reset the selected role.
+    this.selectedRole.set(null);
+
+    // Reset the pagination.
+    this.pageNumber.set(this.DEFAULT_PAGE_NUMBER);
+    this.pageSize.set(this.DEFAULT_PAGE_SIZE);
+
+    // Reset to first page.
+    this._loadUsers({
+      pageNumber: this.pageNumber(),
+      pageSize: this.pageSize(),
+    });
+  }
+
+  private _loadUsers(options: UsersQueryOptions): void {
+    this._userService
+      .getUsers$(options)
+      .pipe(
+        tap((res) => {
+          this.users.set(res.results);
+          this.pageNumber.set(res.pageNumber);
+          this.pageSize.set(res.pageSize);
+          this.totalRecords.set(res.total);
+        }),
+        takeUntilDestroyed(this._destroyRef),
+      )
+      .subscribe();
+  }
+
+  private _loadRoles(): void {
+    this._roleService
+      .getRoles$()
+      .pipe(
+        tap((res) => this.roles.set(res)),
+        takeUntilDestroyed(this._destroyRef),
+      )
+      .subscribe();
+  }
+}

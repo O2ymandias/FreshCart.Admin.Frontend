@@ -1,0 +1,49 @@
+<p-button
+  label="Gallery"
+  severity="secondary"
+  icon="pi pi-external-link"
+  (click)="visible.set(true)"
+/>
+
+<p-dialog
+  header="Update Gallery"
+  styleClass="w-[75%]"
+  [modal]="true"
+  [(visible)]="visible"
+  [closeButtonProps]="{
+    severity: 'secondary',
+    rounded: true,
+    outlined: true,
+  }"
+>
+  <div class="app-ring-1 my-5 space-y-4 rounded-lg p-5">
+    <h2 class="text-lg font-semibold">Product Gallery</h2>
+
+    <div
+      class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+    >
+      @for (image of gallery(); track $index) {
+        <div class="relative">
+          <app-product-gallery-image
+            [imageSrc]="image.pictureUrl"
+            [imageAlt]="image.altText ?? 'product gallery image'"
+            (onRemoved)="deleteFromProductGallery(image.pictureUrl)"
+          />
+        </div>
+      } @empty {
+        <div class="col-span-full flex items-center justify-center p-10">
+          <p class="text-gray-500 dark:text-gray-400">
+            This product has no gallery images.
+          </p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="my-5">
+    <app-product-gallery-uploader
+      [productId]="productId()"
+      (onUpload)="refreshGallery()"
+    />
+  </div>
+</p-dialog>
