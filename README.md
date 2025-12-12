@@ -101,4 +101,4 @@ Navigate to `http://localhost:4200`
 
 ---
 
-**FreshCart Admin Dashboard Frontend** - Built with Angular 20 for modern e-commerce manageme
+**FreshCart Admin Dashboard Frontend** - Built with Angular 20 for modern e-commerce management.
